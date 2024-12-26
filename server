@@ -1,0 +1,33 @@
+from flask import Flask, request
+
+app = Flask(__name__)
+
+storage = {}
+
+@app.route('/')
+def homepage():
+    return '<h1>Welcome</h1>'
+
+
+@app.route('/set')
+def set_value():
+    somekey = request.args.get('somekey')
+    somevalue = request.args.get('somevalue')
+    if somekey and somevalue:
+        storage[somekey] = somevalue
+        return f"Message: 'Success, somekey: {somekey}, somevalue: {somevalue}"
+    else:
+        return "Message: 'Error: 'somekey' and somevalue' parameters are required'"
+
+@app.route('/get')
+def get_value():
+    somekey = request.args.get('somekey')
+
+    if somekey in storage:
+        return f'{somekey}: {storage[somekey]}'
+    else:
+        return f"Message: Key '{somekey}' is not found"
+
+
+if __name__ == '__main__':
+    app.run(host='localhost', port=4000, debug=True)
